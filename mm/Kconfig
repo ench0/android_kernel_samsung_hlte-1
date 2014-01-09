@@ -478,6 +478,13 @@ config ZSWAP_ENABLE_WRITEBACK
 	depends on ZSWAP
 	default n
 
+config ZSWAP_ENABLE_WRITEBACK
+	bool "zswap writeback"
+	depends on ZSWAP
+	default n
+	help
+	  enable zswap writeback capabilities
+
 config DIRECT_RECLAIM_FILE_PAGES_ONLY
 	bool "Reclaim file pages only on direct reclaim path"
 	depends on ZSWAP
