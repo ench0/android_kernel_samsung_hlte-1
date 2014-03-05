@@ -127,6 +127,7 @@ static int timer_slack_val = DEFAULT_TIMER_SLACK;
 #define TOP_STOCK_FREQ 2265600
 #define DEFAULT_SCREEN_OFF_MAX 2265600
 static unsigned long screen_off_max = DEFAULT_SCREEN_OFF_MAX;
+#define TOP_STOCK_FREQ 2265600
 
 static bool io_is_busy;
 
@@ -454,6 +455,8 @@ static void cpufreq_interactive_timer(unsigned long data)
 			if (new_freq < hispeed_freq)
 				new_freq = hispeed_freq;
 		}
+		if (new_freq > TOP_STOCK_FREQ && cpu_load < 99)
+			new_freq = TOP_STOCK_FREQ;
 	} else {
 		new_freq = choose_freq(pcpu, loadadjfreq);
 
