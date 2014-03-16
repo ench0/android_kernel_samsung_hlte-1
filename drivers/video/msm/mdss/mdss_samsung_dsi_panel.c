@@ -3486,6 +3486,8 @@ static int samsung_dsi_panel_event_handler(int event)
 			is_negative_on();
 			break;
 #endif
+		case MDSS_EVENT_RESET:
+			break;
 		default:
 			pr_err("%s : unknown event \n", __func__);
 			break;
