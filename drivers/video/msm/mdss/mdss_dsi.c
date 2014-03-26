@@ -970,6 +970,8 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 				panel_data);
 	pr_debug("%s+:event=%d\n", __func__, event);
 
+	MDSS_XLOG(event, arg, ctrl_pdata->ndx, 0x3333);
+
 	switch (event) {
 	case MDSS_EVENT_UNBLANK:
 #ifdef CONFIG_LCD_NOTIFY
