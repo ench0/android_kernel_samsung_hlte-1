@@ -355,6 +355,8 @@ MODFLAGS        = -DMODULE \
                   -mtune=cortex-a15 \
 		  -fgcse-las \
 		  -fpredictive-commoning \
+                  -munaligned-access \
+                  -fno-pic \
                   -O3
 
 CFLAGS_MODULE   = $(MODFLAGS)
@@ -364,6 +366,7 @@ CFLAGS_KERNEL   = -mfpu=neon-vfpv4 \
                   -mtune=cortex-a15 \
                   -fgcse-las \
                   -fpredictive-commoning \
+                  -munaligned-access \
 		  -O2
 
 ifeq ($(ENABLE_GRAPHITE),true)
