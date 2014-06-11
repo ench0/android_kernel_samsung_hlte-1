@@ -34,7 +34,7 @@
 #define DEFAULT_HISTORY_SIZE	10
 #define DEFAULT_DOWN_LOCK_DUR	1000
 #define DEFAULT_BOOST_LOCK_DUR	4000 * 1000L
-#define DEFAULT_NR_CPUS_BOOSTED	2
+#define DEFAULT_NR_CPUS_BOOSTED	1
 #define DEFAULT_MIN_CPUS_ONLINE	1
 #define DEFAULT_MAX_CPUS_ONLINE	NR_CPUS
 #define DEFAULT_FAST_LANE_LOAD	95
@@ -49,7 +49,7 @@ do { 				\
 } while (0)
 
 static struct cpu_hotplug {
-	unsigned int enabled;
+	unsigned int msm_enabled;
 	unsigned int target_cpus;
 	unsigned int min_cpus_online;
 	unsigned int max_cpus_online;
@@ -65,7 +65,7 @@ static struct cpu_hotplug {
 	struct work_struct resume_work;
 	struct notifier_block notif;
 } hotplug = {
-	.enabled = HOTPLUG_ENABLED,
+	.msm_enabled = HOTPLUG_ENABLED,
 	.min_cpus_online = DEFAULT_MIN_CPUS_ONLINE,
 	.max_cpus_online = DEFAULT_MAX_CPUS_ONLINE,
 	.cpus_boosted = DEFAULT_NR_CPUS_BOOSTED,
@@ -573,7 +573,7 @@ static ssize_t show_enable_hotplug(struct device *dev,
 				   struct device_attribute *msm_hotplug_attrs,
 				   char *buf)
 {
-	return sprintf(buf, "%u\n", hotplug.enabled);
+	return sprintf(buf, "%u\n", hotplug.msm_enabled);
 }
 
 static ssize_t store_enable_hotplug(struct device *dev,
@@ -587,9 +587,12 @@ static ssize_t store_enable_hotplug(struct device *dev,
 	if (ret != 1 || val < 0 || val > 1)
 		return -EINVAL;
 
-	hotplug.enabled = val;
+	if (val == hotplug.msm_enabled)
+		return count;
 
-	if (hotplug.enabled) {
+	hotplug.msm_enabled = val;
+
+	if (hotplug.msm_enabled) {
 		reschedule_hotplug_work();
 	} else {
 		flush_workqueue(hotplug_wq);
@@ -867,7 +870,7 @@ static ssize_t show_current_load(struct device *dev,
 	return sprintf(buf, "%u\n", stats.cur_avg_load);
 }
 
-static DEVICE_ATTR(enabled, 644, show_enable_hotplug, store_enable_hotplug);
+static DEVICE_ATTR(msm_enabled, 644, show_enable_hotplug, store_enable_hotplug);
 static DEVICE_ATTR(down_lock_duration, 644, show_down_lock_duration,
 		   store_down_lock_duration);
 static DEVICE_ATTR(boost_lock_duration, 644, show_boost_lock_duration,
@@ -886,7 +889,7 @@ static DEVICE_ATTR(fast_lane_load, 644, show_fast_lane_load,
 static DEVICE_ATTR(current_load, 444, show_current_load, NULL);
 
 static struct attribute *msm_hotplug_attrs[] = {
-	&dev_attr_enabled.attr,
+	&dev_attr_msm_enabled.attr,
 	&dev_attr_down_lock_duration.attr,
 	&dev_attr_boost_lock_duration.attr,
 	&dev_attr_update_rate.attr,
@@ -967,7 +970,7 @@ static int __devinit msm_hotplug_probe(struct platform_device *pdev)
 		INIT_DELAYED_WORK(&dl->lock_rem, remove_down_lock);
 	}
 
-	if (hotplug.enabled)
+	if (hotplug.msm_enabled)
 		queue_delayed_work_on(0, hotplug_wq, &hotplug_work,
 				      START_DELAY);
 
