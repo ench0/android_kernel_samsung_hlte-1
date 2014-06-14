@@ -465,6 +465,8 @@ obj-$(CONFIG_MSM_DEVFREQ_CPUBW) += devfreq_cpubw.o
 obj-$(CONFIG_WALL_CLK) += wallclk.o
 obj-$(CONFIG_WALL_CLK_SYSFS) += wallclk_sysfs.o
 
+obj-$(CONFIG_TURBO_BOOST) += msm_turbo.o
+
 obj-$(CONFIG_BT_BCM4335) += board-bluetooth-bcm4335.o
 obj-$(CONFIG_BT_BCM4339) += board-bluetooth-bcm4339.o
 obj-$(CONFIG_BT_BCM4354) += board-bluetooth-bcm4354.o
