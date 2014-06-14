@@ -21,11 +21,19 @@
 #include <linux/cpumask.h>
 
 #ifdef CONFIG_TURBO_BOOST
+
+#ifdef CONFIG_CPU_OC
+
 #ifdef CONFIG_OC_ULTIMATE
 #define STOCK_CPU_MAX_SPEED	2496000
 #else
+#define STOCK_CPU_MAX_SPEED	2496000
+#endif
+
+#else
 #define STOCK_CPU_MAX_SPEED	2265600
 #endif
+
 #endif
 
 int msm_turbo(int cpufreq)
