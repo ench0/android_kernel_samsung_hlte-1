@@ -116,6 +116,10 @@ out:
 	mutex_unlock(&l2bw_lock);
 }
 
+#ifdef CONFIG_TURBO_BOOST
+extern int msm_turbo(int);
+#endif
+
 struct cpu_freq {
 	uint32_t max;
 	uint32_t min;
@@ -124,11 +128,9 @@ struct cpu_freq {
 	uint32_t limits_init;
 };
 
-#ifdef CONFIG_TURBO_BOOST
-extern int msm_turbo(int);
-#endif
 
 static DEFINE_PER_CPU(struct cpu_freq, cpu_freq_info);
+
 static int set_cpu_freq(struct cpufreq_policy *policy, unsigned int new_freq,
 			unsigned int index)
 {
