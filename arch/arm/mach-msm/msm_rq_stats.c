@@ -40,11 +40,10 @@ struct notifier_block freq_transition;
 struct notifier_block cpu_hotplug;
 
 struct cpu_load_data {
-	u64 prev_cpu_idle;
-	u64 prev_cpu_wall;
-	u64 prev_cpu_iowait;
+	cputime64_t prev_cpu_idle;
+	cputime64_t prev_cpu_wall;
+	cputime64_t prev_cpu_iowait;
 	unsigned int avg_load_maxfreq;
-	unsigned int cur_load_maxfreq;
 	unsigned int samples;
 	unsigned int window_size;
 	unsigned int cur_freq;
@@ -77,7 +76,7 @@ static inline u64 get_cpu_idle_time_jiffy(unsigned int cpu, u64 *wall)
 	return jiffies_to_usecs(idle_time);
 }
 
-static inline u64 get_cpu_idle_time(unsigned int cpu, u64 *wall)
+static inline cputime64_t get_cpu_idle_time(unsigned int cpu, cputime64_t *wall)
 {
 	u64 idle_time = get_cpu_idle_time_us(cpu, NULL);
 
@@ -89,8 +88,8 @@ static inline u64 get_cpu_idle_time(unsigned int cpu, u64 *wall)
 	return idle_time;
 }
 
-static inline u64 get_cpu_iowait_time(unsigned int cpu,
-							u64 *wall)
+static inline cputime64_t get_cpu_iowait_time(unsigned int cpu,
+							cputime64_t *wall)
 {
 	u64 iowait_time = get_cpu_iowait_time_us(cpu, wall);
 
@@ -105,7 +104,7 @@ static int update_average_load(unsigned int freq, unsigned int cpu)
 	int ret;
 	unsigned int idle_time, wall_time, iowait_time;
 	unsigned int cur_load, load_at_max_freq;
-	u64 cur_wall_time, cur_idle_time, cur_iowait_time;
+	cputime64_t cur_wall_time, cur_idle_time, cur_iowait_time;
 	struct cpu_load_data *pcpu = &per_cpu(cpuload, cpu);
 	struct cpufreq_policy policy;
 
@@ -168,7 +167,6 @@ static unsigned int report_load_at_max_freq(void)
 		mutex_lock(&pcpu->cpu_load_mutex);
 		update_average_load(pcpu->cur_freq, cpu);
 		total_load += pcpu->avg_load_maxfreq;
-		pcpu->cur_load_maxfreq = pcpu->avg_load_maxfreq;
 		pcpu->avg_load_maxfreq = 0;
 		mutex_unlock(&pcpu->cpu_load_mutex);
 	}
@@ -421,7 +419,7 @@ static int __init msm_rq_stats_init(void)
 		cpufreq_get_policy(&cpu_policy, i);
 		pcpu->policy_max = cpu_policy.max;
 		if (cpu_online(i))
-			pcpu->cur_freq = cpufreq_quick_get(i);
+			pcpu->cur_freq = cpu_policy.cur;
 		cpumask_copy(pcpu->related_cpus, cpu_policy.cpus);
 	}
 	freq_transition.notifier_call = cpufreq_transition_handler;
