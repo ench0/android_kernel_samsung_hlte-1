@@ -3597,8 +3597,8 @@ static int pci_set_vga_state_arch(struct pci_dev *dev, bool decode,
 /**
  * pci_set_vga_state - set VGA decode state on device and parents if requested
  * @dev: the PCI device
- * @decode: true = enable decoding, false = disable decoding
- * @command_bits: PCI_COMMAND_IO and/or PCI_COMMAND_MEMORY
+ * @decode: true = enable decode, false = disable decoding
+ * @command_bit: PCI_COMMAND_IO and/or PCI_COMMAND_MEMORY
  * @flags: traverse ancestors and change bridges
  * CHANGE_BRIDGE_ONLY / CHANGE_BRIDGE
  */
@@ -3610,7 +3610,7 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
 	u16 cmd;
 	int rc;
 
-	WARN_ON((flags & PCI_VGA_STATE_CHANGE_DECODES) & (command_bits & ~(PCI_COMMAND_IO|PCI_COMMAND_MEMORY)));
+	WARN_ON((flags & PCI_VGA_STATE_CHANGE_DECODES) && (command_bits & ~(PCI_COMMAND_IO|PCI_COMMAND_MEMORY)));
 
 	/* ARCH specific VGA enables */
 	rc = pci_set_vga_state_arch(dev, decode, command_bits, flags);
