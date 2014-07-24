@@ -71,7 +71,7 @@ static DEFINE_PER_CPU(struct cpufreq_work_struct, cpufreq_work);
 static struct workqueue_struct *msm_cpufreq_wq;
 
 /* maxscroff */
-uint32_t maxscroff_freq = 1190400;
+uint32_t maxscroff_freq = 883200;
 uint32_t maxscroff = 1; 
 
 struct cpufreq_suspend_t {
