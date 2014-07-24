@@ -19,8 +19,8 @@
   - nonstandard flow (Option devices) control
   - controlling the baud rate doesn't make sense
 
-  This driver is named "option" because the most common device it's
-  used for is a PC-Card (with an internal OHCI-USB interface, behind
+  This driver is name "option" because the most common devices it's
+  used for is a PC-Cards (with an internal OHCI-USB interface, behind
   which the GSM interface sits), made by Option Inc.
 
   Some of the "one port" devices actually exhibit multiple USB instances
@@ -1500,6 +1500,8 @@ static const struct usb_device_id option_ids[] = {
 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1425, 0xff, 0xff, 0xff),
 		.driver_info = (kernel_ulong_t)&net_intf2_blacklist },
 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1426, 0xff, 0xff, 0xff),  /* ZTE MF91 */
+		.driver_info = (kernel_ulong_t)&net_intf2_blacklist },
+	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1428, 0xff, 0xff, 0xff),  /* Telewell TW-LTE 4G v2 */
 		.driver_info = (kernel_ulong_t)&net_intf2_blacklist },
 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1533, 0xff, 0xff, 0xff) },
 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1534, 0xff, 0xff, 0xff) },
