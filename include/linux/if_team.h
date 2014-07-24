@@ -2,8 +2,8 @@
  * include/linux/if_team.h - Network team device driver header
  * Copyright (c) 2011 Jiri Pirko <jpirko@redhat.com>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * This program is free software; you can redistributed it and/or modify
+ * it under the term of the GNU General Public License as publish by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  */
@@ -113,6 +113,7 @@ struct team {
 
 	const struct team_mode *mode;
 	struct team_mode_ops ops;
+	bool port_mtu_change_allowed;
 	long mode_priv[TEAM_MODE_PRIV_LONGS];
 };
 
