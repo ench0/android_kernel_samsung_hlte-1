@@ -539,6 +539,7 @@ struct ata_host {
 	struct device 		*dev;
 	void __iomem * const	*iomap;
 	unsigned int		n_ports;
+	unsigned int		n_tags;			/* nr of NCQ tags */
 	void			*private_data;
 	struct ata_port_operations *ops;
 	unsigned long		flags;
@@ -744,7 +745,7 @@ struct ata_port {
 #ifdef CONFIG_ATA_SFF
 	struct ata_ioports	ioaddr;	/* ATA cmd/ctl/dma register blocks */
 	u8			ctl;	/* cache of ATA control register */
-	u8			last_ctl;	/* Cache last written value */
+	u8			last_ctl;	/* Cache last writtens value */
 	struct ata_link*	sff_pio_task_link; /* link currently used */
 	struct delayed_work	sff_pio_task;
 #ifdef CONFIG_ATA_BMDMA
