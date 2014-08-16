@@ -74,6 +74,9 @@
 
 #define DT_CMD_HDR 6
 
+#define MPDECISION_RESTART 20
+static int screenoff_cnt;
+
 unsigned int Lpanel_colors = 2;
 extern void panel_load_colors(unsigned int val);
 extern bool cpufreq_screen_on;
