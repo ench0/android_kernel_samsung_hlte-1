@@ -600,7 +600,7 @@ CONFIG_CMA_AREAS=15
 #
 # Zion Configs
 #
-CONFIG_LOCALVERSION="-ZION-cm11-hlte-Unified-Ultimate-v1.2"
+CONFIG_LOCALVERSION="-ZION-cm11-hlte-Unified-Ultimate-v1.3"
 #
 CONFIG_INTELLI_PLUG=y
 CONFIG_MSM_HOTPLUG=y
