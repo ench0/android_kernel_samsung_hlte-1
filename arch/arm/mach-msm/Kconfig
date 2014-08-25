@@ -288,6 +288,7 @@ config ARCH_MSM8974
 	select KRAIT_REGULATOR
 	select ENABLE_VMALLOC_SAVINGS
 	select MSM_AVTIMER
+	select HAS_MACH_MEMUTILS
 
 config ARCH_MSM8974PRO
 	bool "MSM8974PRO"
@@ -3789,6 +3790,12 @@ config PCM_ROUTE_VOICE_STUB
 	bool "External AUXPCM device route to SLIMBUS or WCN(BT) using the VOICE_STUB Front End"
 	default n
 	depends on ARCH_MSM8974
+
+config HAS_MACH_MEMUTILS
+	default n
+	bool "Motorola MSM memcpy enhancements"
+	help
+	Faster memcpy performance for Krait
 
 config KRAIT_REGULATOR
 	bool "Support Kraits powered via ganged regulators in the pmic"
