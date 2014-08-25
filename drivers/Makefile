@@ -159,3 +159,6 @@ obj-$(CONFIG_SENSORS_FINGERPRINT)	+= fingerprint/
 
 obj-$(CONFIG_EXTCON)		+= extcon/
 obj-$(CONFIG_IR_REMOCON_MC96)	+= irda/
+ifeq (1, $(shell if [ -d drivers/exfat ] ; then echo 1 ; fi))
+obj-y   += exfat/
+endif
