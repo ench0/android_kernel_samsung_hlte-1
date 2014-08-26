@@ -73,6 +73,7 @@
 
 unsigned int Lpanel_colors = 2;
 extern void panel_load_colors(unsigned int val);
+extern bool cpufreq_screen_on;
 
 static struct dsi_buf dsi_panel_tx_buf;
 static struct dsi_buf dsi_panel_rx_buf;
@@ -2374,6 +2375,7 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 	set_power_suspend_state_panel_hook(POWER_SUSPEND_INACTIVE); // Yank555.lu : add hook to handle powersuspend tasks (wakeup)
 #endif
 
+	cpufreq_screen_on = true;
 	ctrl = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 			panel_data);
 
@@ -2508,6 +2510,7 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 	mipi_samsung_disp_send_cmd(PANEL_DISP_OFF, true);
 
 	pr_info("mdss_dsi_panel_off --\n");
+	cpufreq_screen_on = false;
 
 #ifdef CONFIG_POWERSUSPEND
 	set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE); // Yank555.lu : add hook to handle powersuspend tasks (sleep)
