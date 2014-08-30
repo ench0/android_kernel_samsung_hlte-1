@@ -993,7 +993,7 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 #ifdef CONFIG_LCD_NOTIFY
 		lcd_notifier_call_chain(LCD_EVENT_OFF_START, NULL);
 #endif
-		if (ctrl_pdata->off_cmds.link_state == DSI_HS_MODE)
+		if (ctrl_pdata->dsi_off_state == DSI_HS_MODE)
 			rc = mdss_dsi_blank(pdata);
 		break;
 	case MDSS_EVENT_PANEL_OFF:
