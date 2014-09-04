@@ -46,6 +46,18 @@
 static struct cpufreq_frequency_table *dts_freq_table;
 #endif
 
+#ifdef CONFIG_INTELLI_THERMAL
+struct cpu_freq {
+	uint32_t max;
+	uint32_t min;
+	uint32_t allowed_max;
+	uint32_t allowed_min;
+	uint32_t limits_init;
+};
+
+static DEFINE_PER_CPU(struct cpu_freq, cpu_freq_info);
+#endif
+
 static DEFINE_MUTEX(l2bw_lock);
 
 static struct clk *cpu_clk[NR_CPUS];
@@ -71,7 +83,7 @@ static DEFINE_PER_CPU(struct cpufreq_work_struct, cpufreq_work);
 static struct workqueue_struct *msm_cpufreq_wq;
 
 /* maxscroff */
-uint32_t maxscroff_freq = 883200;
+uint32_t maxscroff_freq = 1190400;
 uint32_t maxscroff = 1; 
 
 struct cpufreq_suspend_t {
@@ -287,6 +299,7 @@ static unsigned int msm_cpufreq_get_freq(unsigned int cpu)
 	return acpuclk_get_rate(cpu);
 }
 
+#ifdef CONFIG_INTELLI_THERMAL
 static inline int msm_cpufreq_limits_init(void)
 {
 	int cpu = 0;
