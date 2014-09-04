@@ -24,8 +24,6 @@
 #include <linux/cpufreq_hardlimit.h>
 #endif
 
-extern unsigned int kthermal_limit;
-
 #define CPUFREQ_NAME_LEN 16
 
 
