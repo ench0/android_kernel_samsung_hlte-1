@@ -44,6 +44,7 @@
 
 #ifdef CONFIG_CPU_VOLTAGE_TABLE
 static struct cpufreq_frequency_table *dts_freq_table;
+#endif
 
 #ifdef CONFIG_INTELLI_THERMAL
 struct cpu_freq {
