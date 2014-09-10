@@ -32,10 +32,6 @@
 
 #include <trace/events/power.h>
 
-//Kthermal limit holder to stop govs from setting CPU speed higher than the thermal limit
-struct cpufreq_policy trmlpolicy[10];
-unsigned int kthermal_limit = 0;
-
 #ifdef CONFIG_CPUFREQ_HARDLIMIT
 #include <linux/cpufreq_hardlimit.h>
 #endif
@@ -1736,15 +1732,6 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
  *                              GOVERNORS                            *
  *********************************************************************/
 
-void do_kthermal(unsigned int cpu, unsigned int freq)
-{
-	kthermal_limit = freq;
-  	if (freq > 0)
-  	{
-  		//pr_alert("DO KTHERMAL %u-%u\n", cpu, freq);
-		__cpufreq_driver_target(&trmlpolicy[cpu], freq, CPUFREQ_RELATION_H);
-	}
-}
 
 int __cpufreq_driver_target(struct cpufreq_policy *policy,
 			    unsigned int target_freq,
@@ -1754,9 +1741,6 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
 
 	if (cpufreq_disabled())
 		return -ENODEV;
-
-	if (kthermal_limit > 0 && target_freq > kthermal_limit)
-		target_freq = kthermal_limit;
 
 	pr_debug("target for CPU %u: %u kHz, relation %u\n", policy->cpu,
 		target_freq, relation);
@@ -2045,8 +2029,7 @@ static int __cpufreq_set_policy(struct cpufreq_policy *data,
 		pr_debug("governor: change or update limits\n");
 		__cpufreq_governor(data, CPUFREQ_GOV_LIMITS);
 	}
-	memcpy(&trmlpolicy[policy->cpu], policy, sizeof(struct cpufreq_policy));
-	
+
 error_out:
 	return ret;
 }
