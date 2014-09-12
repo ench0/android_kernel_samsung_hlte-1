@@ -61,6 +61,12 @@ module_param(input_boost_freq, uint, 0644);
 static unsigned int input_boost_ms = 40;
 module_param(input_boost_ms, uint, 0644);
 
+static unsigned int migration_load_threshold = 30;
+module_param(migration_load_threshold, uint, 0644);
+
+static bool load_based_syncs = 1;
+module_param(load_based_syncs, bool, 0644);
+
 static u64 last_input_time;
 #define MIN_INPUT_INTERVAL (150 * USEC_PER_MSEC)
 
