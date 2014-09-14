@@ -296,7 +296,6 @@ static unsigned int msm_cpufreq_get_freq(unsigned int cpu)
 	return acpuclk_get_rate(cpu);
 }
 
-#ifdef CONFIG_INTELLI_THERMAL
 static inline int msm_cpufreq_limits_init(void)
 {
 	int cpu = 0;
@@ -357,7 +356,6 @@ int msm_cpufreq_set_freq_limits(uint32_t cpu, uint32_t min, uint32_t max)
 	return 0;
 }
 EXPORT_SYMBOL(msm_cpufreq_set_freq_limits);
-#endif
 
 static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 {
