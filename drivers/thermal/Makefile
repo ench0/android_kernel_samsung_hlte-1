@@ -8,8 +8,11 @@ obj-$(CONFIG_THERMAL_TSENS)	+= msm_tsens.o
 obj-$(CONFIG_THERMAL_TSENS8960) += msm8960_tsens.o
 obj-$(CONFIG_THERMAL_PM8XXX)	+= pm8xxx-tm.o
 obj-$(CONFIG_INTELLI_THERMAL)	+= intelli/msm_thermal.o
-obj-$(CONFIG_INTELLI_THERMAL_V2)	+= intelli/msm_thermal_v2.o
+ifdef CONFIG_INTELLI_THERMAL_V2
+obj-$(CONFIG_INTELLI_THERMAL_V2)	+= intelli/
+else
 obj-$(CONFIG_THERMAL_MONITOR)	+= msm_thermal.o msm_thermal-dev.o
+endif
 obj-$(CONFIG_SPEAR_THERMAL)		+= spear_thermal.o
 obj-$(CONFIG_THERMAL_TSENS8974)	+= msm8974-tsens.o
 obj-$(CONFIG_THERMAL_QPNP)	+= qpnp-temp-alarm.o
