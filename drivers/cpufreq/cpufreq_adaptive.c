@@ -677,7 +677,7 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 
 		mutex_lock(&dbs_mutex);
 
-		rc = sysfs_create_group(&policy->kobj, &dbs_attr_group);
+		rc = sysfs_create_group(policy->kobj, &dbs_attr_group);
 		if (rc) {
 			mutex_unlock(&dbs_mutex);
 			return rc;
@@ -737,7 +737,7 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 		dbs_timer_exit(this_dbs_info);
 
 		mutex_lock(&dbs_mutex);
-		sysfs_remove_group(&policy->kobj, &dbs_attr_group);
+		sysfs_remove_group(policy->kobj, &dbs_attr_group);
 		mutex_destroy(&this_dbs_info->timer_mutex);
 		dbs_enable--;
 		mutex_unlock(&dbs_mutex);
