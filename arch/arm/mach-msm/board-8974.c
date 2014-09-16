@@ -46,6 +46,14 @@
 #include <linux/persistent_ram.h>
 #endif
 
+#ifdef CONFIG_CPU_FREQ_GOV_UBERDEMAND
+int set_second_phase_freq(int cpufreq);
+#endif
+#ifdef CONFIG_CPU_FREQ_GOV_BADASS
+int set_two_phase_freq_badass(int cpufreq);
+int set_three_phase_freq_badass(int cpufreq);
+#endif
+
 #include "board-dt.h"
 #include "clock.h"
 #include "devices.h"
