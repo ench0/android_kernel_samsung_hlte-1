@@ -33,6 +33,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_BADASS)       += cpufreq_badass.o
 obj-$(CONFIG_CPU_FREQ_GOV_LAZY)		+= cpufreq_lazy.o
 obj-$(CONFIG_CPU_FREQ_GOV_UBERDEMAND)	+= cpufreq_uberdemand.o
 obj-$(CONFIG_CPU_FREQ_GOV_DARKNESS)	+= cpufreq_darkness.o
+obj-$(CONFIG_CPU_FREQ_GOV_OPTIMAX)	+= cpufreq_optimax.o
 
 # CPUfreq cross-arch helpers
 obj-$(CONFIG_CPU_FREQ_TABLE)		+= freq_table.o
