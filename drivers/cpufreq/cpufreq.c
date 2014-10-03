@@ -38,8 +38,6 @@
 
 static unsigned int Lenable_auto_hotplug = 0;
 extern void apenable_auto_hotplug(bool state);
-extern ssize_t show_auto_hotplug_enable_core_loads(struct cpufreq_policy *policy, char *buf);
-extern ssize_t store_auto_hotplug_enable_core_loads(struct cpufreq_policy *policy, const char *buf, size_t count);
 
 /**
  * The "cpufreq driver" - the arch- or hardware-dependent low
