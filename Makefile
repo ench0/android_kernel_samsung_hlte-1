@@ -244,10 +244,13 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
 	  else echo sh; fi ; fi)
 
-HOSTCC       = $(CCACHE) gcc
-HOSTCXX      = $(CCACHE) g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block
-HOSTCXXFLAGS = -Ofast -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block
+GRAPHITE_FLAGS = -floop-nest-optimize -fgraphite -fgraphite-identity -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block
+SABERMOD_FLAGS = -pipe -DNDEBUG -ffast-math -mtune=cortex-a15 -mcpu=cortex-a15 -marm -mfpu=neon-vfpv4 -ftree-vectorize -mvectorize-with-neon-quad -munaligned-access -fgcse-lm -fgcse-sm -fsingle-precision-constant -fforce-addr -fsched-spec-load -funroll-loops -fpredictive-commoning
+
+HOSTCC       = gcc
+HOSTCXX      = g++
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -pipe -DNDEBUG -fgcse-las $(GRAPHITE_FLAGS)
+HOSTCXXFLAGS = -pipe -DNDEBUG -O3 -fgcse-las $(GRAPHITE_FLAGS)
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -346,25 +349,19 @@ KALLSYMS	= scripts/kallsyms
 PERL		= perl
 CHECK		= sparse
 
-CC 		+= -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block
-CPP 		+= -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block
-
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 
 ### Optimizations ###
 
-KERNELFLAGS	= -O2 -DNDEBUG -munaligned-access -fgcse-lm -fgcse-sm -fsingle-precision-constant -fforce-addr -fsched-spec-load -mtune=cortex-a15 -mcpu=cortex-a15 -marm -mfpu=neon-vfpv4 -ftree-vectorize -mvectorize-with-neon-quad -funroll-loops -fpredictive-commoning -ffast-math -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten
-MODFLAGS	= -Ofast -DNDEBUG -munaligned-access -fgcse-lm -fgcse-sm -fsingle-precision-constant -fforce-addr -fsched-spec-load -mtune=cortex-a15 -mcpu=cortex-a15 -marm -mfpu=neon-vfpv4 -ftree-vectorize -mvectorize-with-neon-quad -funroll-loops -fpredictive-commoning -ffast-math -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten
+KERNELFLAGS	= -O2 $(SABERMOD_FLAGS) $(GRAPHITE_FLAGS)
+MODFLAGS	= -DMODULE -O3 $(SABERMOD_FLAGS) $(GRAPHITE_FLAGS)
 CFLAGS_MODULE   = $(MODFLAGS)
 AFLAGS_MODULE   = $(MODFLAGS)
-LDFLAGS_MODULE  = -T $(srctree)/scripts/module-common.lds
+LDFLAGS_MODULE  = -T $(srctree)/scripts/module-common.lds -flto
 CFLAGS_KERNEL	= $(KERNELFLAGS)
 AFLAGS_KERNEL	= $(KERNELFLAGS)
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
-AFLAGS_KERNEL	=
-CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
-
 
 # Use LINUXINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
@@ -374,18 +371,13 @@ LINUXINCLUDE    := -I$(srctree)/arch/$(hdr-arch)/include \
                    -include $(srctree)/include/linux/kconfig.h
 
 KBUILD_CPPFLAGS := -D__KERNEL__
-
-KBUILD_CFLAGS   := -Wall -DNDEBUG -Wundef -Wstrict-prototypes -Wno-trigraphs \
+KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
-		   -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
-		   -Wno-sizeof-pointer-memaccess \
-		   -fmodulo-sched -fmodulo-sched-allow-regmoves \
-		   -mfpu=neon-vfpv4 -mtune=cortex-a15  -mcpu=cortex-a15 -fgraphite -floop-parallelize-all \
-		   -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten
-KBUILD_AFLAGS_KERNEL :=
+		   $(KERNELFLAGS)
+                  
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 KBUILD_AFLAGS_MODULE  := -DMODULE
@@ -575,18 +567,10 @@ endif # $(dot-config)
 all: vmlinux
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-#we want all warnings to be seen and fixed
-#KBUILD_CFLAGS += -Os $(call cc-disable-warning,maybe-uninitialized,)
-KBUILD_CFLAGS	+= -Os
-endif
-ifdef CONFIG_CC_OPTIMIZE_DEFAULT
-KBUILD_CFLAGS	+= -O2
-endif
-ifdef CONFIG_CC_OPTIMIZE_ALOT
-KBUILD_CFLAGS	+= -Ofast
-endif
-ifeq ($(ENABLE_GRAPHITE),true)
-KBUILD_CFLAGS	+= -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block
+KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
+else
+KBUILD_CFLAGS	+= -O3
+KBUILD_CFLAGS	+= $(GRAPHITE_FLAGS)
 endif
 endif
 
