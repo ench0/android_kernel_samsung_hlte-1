@@ -249,9 +249,10 @@ SABERMOD_FLAGS = -pipe -DNDEBUG -ffast-math -mtune=cortex-a15 -mcpu=cortex-a15 -
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -pipe -DNDEBUG -fgcse-las $(GRAPHITE_FLAGS)
-HOSTCXXFLAGS = -pipe -DNDEBUG -O3 -fgcse-las $(GRAPHITE_FLAGS)
-
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -pipe -DNDEBUG -fgcse-las
+HOSTCXXFLAGS = -pipe -DNDEBUG -O3 -fgcse-las
+HOSTCXXFLAGS += $(GRAPHITE_FLAGS)
+HOSTCFLAGS += $(GRAPHITE_FLAGS)
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
 
@@ -334,8 +335,10 @@ include $(srctree)/scripts/Kbuild.include
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
-CC      = $(CCACHE) $(CROSS_COMPILE)gcc
+CC		= $(CROSS_COMPILE)gcc
 CPP		= $(CC) -E
+CC		+= $(GRAPHITE_FLAGS)
+CPP		+= $(GRAPHITE_FLAGS)
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
 STRIP		= $(CROSS_COMPILE)strip
