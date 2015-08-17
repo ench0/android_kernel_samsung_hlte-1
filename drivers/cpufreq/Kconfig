@@ -148,14 +148,11 @@ config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 	  loading your cpufreq low-level hardware driver, using the
 	  'interactive' governor for latency-sensitive workloads.
 
-config CPU_FREQ_GOV_INTERACTIVEPRO
-	tristate "'interactive' cpufreq policy governor"
+config CPU_FREQ_DEFAULT_GOV_INTERACTIVEPRO
+	bool "interactivepro"
+	select CPU_FREQ_GOV_INTERACTIVEPRO
 	help
-	  'interactive' - This driver adds a dynamic cpufreq policy governor
-	  designed for latency-sensitive workloads.
-	  This governor attempts to reduce the latency of clock
-	  increases so that the system is more responsive to
-	  interactive workloads.
+	  Use the CPUFreq governor 'interactivepro' as default.
 
 config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
 	bool "smartass2"
@@ -478,6 +475,24 @@ config CPU_FREQ_GOV_USERSPACE
 	  For details, take a look at <file:Documentation/cpu-freq/>.
 
 	  If in doubt, say Y.
+
+config CPU_FREQ_GOV_INTERACTIVE
+	tristate "'interactive' cpufreq policy governor"
+	help
+	  'interactive' - This driver adds a dynamic cpufreq policy governor
+	  designed for latency-sensitive workloads.
+	  This governor attempts to reduce the latency of clock
+	  increases so that the system is more responsive to
+	  interactive workloads.
+
+config CPU_FREQ_GOV_INTERACTIVEPRO
+	tristate "'interactivepro' cpufreq policy governor"
+	help
+	  'interactivepro' - This driver adds a dynamic cpufreq policy governor
+	  designed for latency-sensitive workloads.
+	  This governor attempts to reduce the latency of clock
+	  increases so that the system is more responsive to
+	  interactive workloads.
 
 config CPU_FREQ_GOV_ONDEMAND
 	tristate "'ondemand' cpufreq policy governor"
